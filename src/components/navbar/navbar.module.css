@@ -1,0 +1,5 @@
+.navbar {
+    grid-area: n;
+    background: lightskyblue;
+    padding: 20px;
+}

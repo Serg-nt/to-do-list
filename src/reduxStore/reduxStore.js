@@ -1,10 +1,11 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import appReducer from "./appReducer";
+import {combineReducers, compose, createStore} from 'redux';
+import taskBoardReducer from "./taskBoardReducer";
 
 const reducers = combineReducers({
-    app: appReducer,
+    taskBoard: taskBoardReducer,
 })
 
-const store = createStore(reducers, applyMiddleware)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const store = createStore(reducers, composeEnhancers())
 
 export default store

@@ -1,25 +1,17 @@
 import React from "react";
 import classes from './App.module.css';
-import store from "./../src/reduxStore/reduxStore";
+import Navbar from "./components/navbar/navbar";
+import TaskBoardContainer from "./components/taskBoard/taskBoard";
 
 class App extends React.Component {
     render() {
-        return <div className={classes.appWrapper}>
-                <div className={classes.app}>
-                    <ul>
-                        <li>Задача 1</li>
-                        <li>Задача 2</li>
-                        <li>Задача 3</li>
-                        <li>Задача 4</li>
-                        <li>Задача 5</li>
-                    </ul>
-                </div>
+        return (
+            <div className={classes.appWrapper}>
+                <Navbar store={this.props.store}/>
+                <TaskBoardContainer />
             </div>
+        )
     }
 }
 
-const AppContainer = () => {
-    return <App store={store} />
-}
-
-export default AppContainer;
+export default App;
