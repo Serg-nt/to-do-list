@@ -7,18 +7,22 @@ const TaskBoard = (props) => {
 
     const activeTaskItems = props.tasks
         .filter(item => item.isActive)
-        .map(t => <TaskItem title={t.title} key={t.id} />)
+        .map(t => <TaskItem key={t.taskId}
+                            title={t.title}
+                            id={t.taskId} /> )
 
     const completedTaskItems = props.tasks
         .filter(item => !item.isActive)
-        .map(t => <TaskItem title={t.title} key={t.id} />)
+        .map(t => <TaskItem key={t.taskId}
+                            title={t.title}
+                            id={t.taskId} /> )
 
     return (
         <div className={classes.board}>
             <ul>
-                { activeTaskItems }
-                <hr />
-                { completedTaskItems }
+                {activeTaskItems}
+                <hr/>
+                {completedTaskItems}
             </ul>
         </div>
     )
