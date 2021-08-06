@@ -13,3 +13,14 @@
     padding: 10px;
     list-style-type: none;
 }
+
+.deactivateTask {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.deleteTask {
+    margin-left: 5px;
+    padding: 1px;
+    cursor: pointer;
+}

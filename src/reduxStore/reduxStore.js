@@ -1,11 +1,19 @@
-import {combineReducers, compose, createStore} from 'redux';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension'
+import thunkMiddleware from 'redux-thunk'
 import taskBoardReducer from "./taskBoardReducer";
 
 const reducers = combineReducers({
     taskBoard: taskBoardReducer,
 })
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const store = createStore(reducers, composeEnhancers())
+const store = createStore(
+    reducers,
+    composeWithDevTools(
+        applyMiddleware(thunkMiddleware)
+    )
+)
+
+window.store = store
 
 export default store

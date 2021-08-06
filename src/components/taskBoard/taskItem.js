@@ -1,42 +1,57 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState} from 'react'
 import classes from "./taskBoard.module.css";
 
-const TaskItem = ({title}) => {
+const TaskItem = ({title, taskId, isActiveTask, updateTask, toggleIsActive, deleteTask}) => {
 
     const [editMode, setEditMode] = useState(false)
-    const [taskTitle, setTitle] = useState(title)
-
-    useEffect( () => {
-        setTitle(title)
-    }, [title] )
+    const [taskTitle, setEditTitle] = useState(title)
+    const [isActiveState, setIsActiveState] = useState(!isActiveTask)
 
     const activateEditMode = () => {
         setEditMode(true)
     }
 
     const onStatusChange = (e) => {
-        setTitle(e.currentTarget.value)
+        setEditTitle(e.currentTarget.value)
     }
 
     const deactivateEditMode = () => {
-
         setEditMode(false)
+        updateTask(taskId, taskTitle)
     }
+
+    const activateDeactivate = () => {
+        setIsActiveState(!isActiveState)
+        toggleIsActive(taskId, isActiveState)
+    }
+
+    const removeTask = () => {
+        deleteTask(taskId)
+    }
+
+    const deletedTask = <span className={classes.deleteTask} onClick={removeTask}>x</span>
 
     return (
         <li>
-            <input type={"checkbox"} onClick={() => {}} />
-            {!editMode &&
-            <div>
-                <span onClick={activateEditMode}>{title}</span>
-            </div>
+            <input type={"checkbox"} onClick={activateDeactivate} onChange={activateDeactivate} defaultChecked={isActiveState}/>
+
+            {!editMode && !isActiveState &&
+            <span onClick={activateEditMode}>
+                {taskTitle}
+                {deletedTask}
+            </span>
             }
-            {editMode &&
-            <div>
-                <input onBlur={deactivateEditMode} onSubmit={deactivateEditMode} onChange={onStatusChange}
-                       value={taskTitle} autoFocus={true}/>
-            </div>
+            {editMode && !isActiveState &&
+            <input onBlur={deactivateEditMode} onSubmit={deactivateEditMode} onChange={onStatusChange}
+                   value={taskTitle} autoFocus={true}/>
             }
+            {isActiveState &&
+            <span className={classes.deactivateTask}>
+                {taskTitle}
+                {deletedTask}
+            </span>
+            }
+
         </li>
     )
 }
