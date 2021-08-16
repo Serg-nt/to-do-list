@@ -1,37 +1,58 @@
-// import axios from "axios";
-//
-// const instance = axios.create({
-//     withCredentials: true,
-//     baseURL: `https://todolist-831f7-default-rtdb.firebaseio.com`,
-//     headers: {"API-KEY": "AIzaSyDYqVveT6hQg6Jofcz_TZJ9gQqQrRjGMJk"}
-// })
-//
-// export const taskBoardAPI = {
-//     getTaskBoard() {
-//         return instance.get().then(response => response.data)
-//     }
-// }
+import firebase from "firebase";
+import {db} from "../index";
 
-// export const profileAPI = {
-//     getUserProfile(userId) {
-//         return instance.get(`profile/` + userId)
-//     },
-//     getStatus(userId) {
-//         return instance.get(`profile/status/` + userId)
-//     },
-//     updateStatus(status) {
-//         return instance.put(`profile/status`, {status: status})
-//     },
-//     savePhoto(photoFile) {
-//         const formData = new FormData()
-//         formData.append("image", photoFile)
-//         return instance.put(`profile/photo`, formData, {
-//             headers: {
-//                 'Content-Type': 'multipart/form-data'
-//             }
-//         })
-//     },
-//     saveProfile(profile) {
-//         return instance.put(`profile`, profile)
-//     }
-// }
+export const authAPI = {
+     login(email, password) {
+         return firebase
+             .auth()
+             .signInWithEmailAndPassword(email, password)
+     },
+     logout() {
+         return firebase
+             .auth()
+             .signOut()
+     },
+    createAccount(email, password) {
+      return firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+    },
+    setUserData(email, userId) {
+         return db.collection('users')
+             .add({
+                 email: email,
+                 userId: userId
+             })
+    },
+}
+
+export const tasksAPI = {
+    getListOfTasks(userId) {
+        return db.collection('tasks')
+            .where('user', '==', userId)
+            .get()
+    },
+    toggleIsCompleted(taskId, isCompleted) {
+        return db.collection('tasks')
+            .doc(taskId)
+            .update({completed: isCompleted})
+    },
+    updateTask(taskId, taskName) {
+        return db.collection('tasks')
+            .doc(taskId)
+            .update({name: taskName})
+    },
+    deleteTask(taskId) {
+        return db.collection('tasks').
+            doc(taskId)
+            .delete()
+    },
+    addNewTask(taskName, userId) {
+        return db.collection('tasks')
+            .add({
+                name: taskName,
+                completed: false,
+                user: userId
+            })
+    }
+}

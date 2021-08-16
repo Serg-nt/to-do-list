@@ -1,0 +1,19 @@
+.header {
+    grid-area: h;
+    background: #1E90FF;
+    padding: 10px;
+}
+
+.auth {
+    margin: 5px;
+    text-align: right;
+}
+
+.auth span {
+    margin-right: 10px;
+}
+
+.auth a {
+    text-decoration: none;
+    color: black;
+}

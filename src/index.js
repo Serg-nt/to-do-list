@@ -2,9 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from "react-redux";
-import App from "./App";
-import store from "./reduxStore/reduxStore";
+import ToDoJSApp from "./App";
 import firebase from 'firebase'
 
 const firebaseConfig = {
@@ -18,13 +16,10 @@ const firebaseConfig = {
 }
 
 firebase.initializeApp(firebaseConfig)
+export const db = firebase.firestore()
+db.settings({ timestampsInSnapshots: true })
 
-ReactDOM.render(
-        <Provider store={store}>
-            <App />
-        </Provider>,
-        document.getElementById('root')
-    );
+ReactDOM.render(<ToDoJSApp/>, document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

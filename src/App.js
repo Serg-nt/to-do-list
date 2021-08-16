@@ -2,22 +2,36 @@ import React from "react";
 import classes from './App.module.css';
 import Navbar from "./components/navbar/navbar";
 import TaskBoardContainer from "./components/taskBoard/taskBoard";
-import firebase from "firebase";
+import {Provider} from "react-redux";
+import store from "./reduxStore/reduxStore";
+import {BrowserRouter, Route} from "react-router-dom";
+import LoginContainer from "./components/login/login";
+import HeaderContainer from "./components/header/header";
 
 class App extends React.Component {
     componentDidMount() {
-        const db = firebase.database()
-        console.log(db)
     }
 
     render() {
         return (
             <div className={classes.appWrapper}>
+                <HeaderContainer/>
                 <Navbar/>
-                <TaskBoardContainer/>
+                <div className={classes.board}>
+                    <Route path='/taskBoard' render={() => <TaskBoardContainer /> }/>
+                    <Route path='/login' render={() => <LoginContainer /> }/>
+                </div>
             </div>
         )
     }
 }
 
-export default App;
+const ToDoJSApp = () => {
+    return <BrowserRouter>
+        <Provider store={store}>
+            <App/>
+        </Provider>
+    </BrowserRouter>
+}
+
+export default ToDoJSApp;

@@ -1,18 +1,18 @@
 import React, {useState} from "react";
 
-const NewTask = ({addNewTask}) => {
+const NewTask = ({addNewTask, userId}) => {
 
-    const [taskTitle, setEditTitle] = useState('')
+    const [taskName, setEditName] = useState('')
 
     const onStatusChange = (e) => {
-        setEditTitle(e.currentTarget.value)
+        setEditName(e.currentTarget.value)
     }
 
     const addTask = () => {
-        if(taskTitle !== '') {
-            addNewTask(taskTitle)
+        if(taskName !== '') {
+            addNewTask(taskName, userId)
         }
-        setEditTitle('')
+        setEditName('')
     }
 
     return (
@@ -20,7 +20,7 @@ const NewTask = ({addNewTask}) => {
             <input placeholder="Enter new task"
                    onBlur={addTask}
                    onChange={onStatusChange}
-                   value={taskTitle}
+                   value={taskName}
             />
         </div>
     )

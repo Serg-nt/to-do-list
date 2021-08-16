@@ -1,28 +1,26 @@
 import React, {useState} from 'react'
 import classes from "./taskBoard.module.css";
 
-const TaskItem = ({title, taskId, isActiveTask, updateTask, toggleIsActive, deleteTask}) => {
+const TaskItem = ({name, taskId, completed, updateTask, toggleIsCompleted, deleteTask}) => {
 
     const [editMode, setEditMode] = useState(false)
-    const [taskTitle, setEditTitle] = useState(title)
-    const [isActiveState, setIsActiveState] = useState(!isActiveTask)
+    const [taskName, setEditName] = useState(name)
 
     const activateEditMode = () => {
         setEditMode(true)
     }
 
     const onStatusChange = (e) => {
-        setEditTitle(e.currentTarget.value)
+        setEditName(e.currentTarget.value)
     }
 
     const deactivateEditMode = () => {
         setEditMode(false)
-        updateTask(taskId, taskTitle)
+        updateTask(taskId, taskName)
     }
 
     const activateDeactivate = () => {
-        setIsActiveState(!isActiveState)
-        toggleIsActive(taskId, isActiveState)
+        toggleIsCompleted(taskId, !completed)
     }
 
     const removeTask = () => {
@@ -33,25 +31,27 @@ const TaskItem = ({title, taskId, isActiveTask, updateTask, toggleIsActive, dele
 
     return (
         <li>
-            <input type={"checkbox"} onClick={activateDeactivate} onChange={activateDeactivate} defaultChecked={isActiveState}/>
-
-            {!editMode && !isActiveState &&
-            <span onClick={activateEditMode}>
-                {taskTitle}
-                {deletedTask}
-            </span>
+            <input type={"checkbox"}
+                   onChange={activateDeactivate}
+                   defaultChecked={completed}/>
+            {!editMode && !completed &&
+                <span>
+                    <span onClick={activateEditMode}>
+                        {taskName}
+                    </span>
+                    {deletedTask}
+                </span>
             }
-            {editMode && !isActiveState &&
+            {editMode && !completed &&
             <input onBlur={deactivateEditMode} onSubmit={deactivateEditMode} onChange={onStatusChange}
-                   value={taskTitle} autoFocus={true}/>
+                   value={taskName} autoFocus={true}/>
             }
-            {isActiveState &&
+            {completed &&
             <span className={classes.deactivateTask}>
-                {taskTitle}
+                {taskName}
                 {deletedTask}
-            </span>
+                </span>
             }
-
         </li>
     )
 }

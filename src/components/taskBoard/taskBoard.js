@@ -1,35 +1,41 @@
 import React from 'react'
-import classes from "./taskBoard.module.css";
 import TaskItem from "./taskItem";
 import {connect} from "react-redux";
-import {addNewTask, deleteTask, toggleIsActive, updateTask} from "../../reduxStore/taskBoardReducer";
+import {addNewTask, deleteTask, getListOfTasks, toggleIsCompleted, updateTask} from "../../reduxStore/taskBoardReducer";
 import NewTask from "./newTask";
+import {Redirect} from "react-router-dom";
 
 class TaskBoard extends React.Component {
 
     componentDidMount() {
+        this.props.getListOfTasks(this.props.userId)
     }
 
     render() {
 
+        if (!this.props.isAuth) {
+            return <Redirect to={'/login'}/>
+        }
+
         const items = this.props.tasks
-            .sort(item => item.isActiveTask ? -1 : 1)
+            .sort(item => item.completed ? 1 : -1)
             .map(t => <TaskItem key={t.taskId}
-                                title={t.title}
+                                name={t.name}
                                 taskId={t.taskId}
-                                order={t.order}
-                                isActiveTask={t.isActiveTask}
+                                completed={t.completed}
                                 updateTask={this.props.updateTask}
-                                toggleIsActive={this.props.toggleIsActive}
+                                toggleIsCompleted={this.props.toggleIsCompleted}
                                 deleteTask={this.props.deleteTask}
             />)
 
         return (
-            <div className={classes.board}>
+            <div>
                 <ul>
                     {items}
                 </ul>
-                <NewTask addNewTask={this.props.addNewTask}/>
+                <NewTask addNewTask={this.props.addNewTask}
+                         userId={this.props.userId}
+                />
             </div>
         )
     }
@@ -37,10 +43,12 @@ class TaskBoard extends React.Component {
 
 
 const mapStateToProps = (state) => ({
-    tasks: state.taskBoard.tasks
+    tasks: state.taskBoard.tasks,
+    isAuth: state.auth.isAuth,
+    userId: state.auth.userId,
 })
 
 const TaskBoardContainer = connect(mapStateToProps,
-    {updateTask, toggleIsActive, deleteTask, addNewTask})(TaskBoard)
+    {updateTask, toggleIsCompleted, deleteTask, addNewTask, getListOfTasks})(TaskBoard)
 
 export default TaskBoardContainer

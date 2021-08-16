@@ -1,35 +1,34 @@
-import {taskBoardAPI} from "../api/api";
+import {tasksAPI} from "../api/api";
 
 const SET_TASK = 'SET_TASK';
-const TOGGLE_IS_ACTIVE = 'TOGGLE_IS_ACTIVE';
+const TOGGLE_IS_COMPLETED = 'TOGGLE_IS_COMPLETED';
 const DELETE_TASK = 'DELETE_TASK';
 const ADD_NEW_TASK = 'ADD_NEW_TASK';
+const GET_LIST_OF_TASKS = 'GET_LIST_OF_TASKS';
 
 const initialState = {
-    tasks: [
-        {taskId: 1, title: "Task 1", isActiveTask: true},
-        {taskId: 2, title: "Task 2", isActiveTask: true},
-        {taskId: 3, title: "Task 3", isActiveTask: true},
-        {taskId: 4, title: "Task 4", isActiveTask: false},
-        {taskId: 5, title: "Task 5", isActiveTask: false},
-        {taskId: 6, title: "Task 6", isActiveTask: false},
-    ],
+    tasks: [],
 }
 
 const taskBoardReducer = (state = initialState, action) => {
     switch (action.type) {
+        case GET_LIST_OF_TASKS:
+            return {
+                ...state,
+                tasks: action.listTasks,
+            }
         case SET_TASK:
             return {
                 ...state,
                 tasks: state.tasks.map(task => task.taskId === action.taskId
-                    ? {...task, title: action.title}
+                    ? {...task, name: action.taskName}
                     : task)
             }
-        case TOGGLE_IS_ACTIVE:
+        case TOGGLE_IS_COMPLETED:
             return {
                 ...state,
                 tasks: state.tasks.map(task => task.taskId === action.taskId
-                    ? {...task, isActiveTask: action.isActiveTask}
+                    ? {...task, completed: action.isCompleted}
                     : task)
             }
         case DELETE_TASK:
@@ -39,9 +38,10 @@ const taskBoardReducer = (state = initialState, action) => {
             }
         case ADD_NEW_TASK:
             const newTask = {
-                taskId: Date.now(),
-                title: action.title,
-                isActiveTask: true
+                name: action.taskName,
+                completed: false,
+                user: action.userId,
+                taskId: action.taskId
             }
             return {
                 ...state,
@@ -52,9 +52,44 @@ const taskBoardReducer = (state = initialState, action) => {
     }
 }
 
-export const updateTask = (taskId, title) => ({type: SET_TASK, taskId, title})
-export const toggleIsActive = (taskId, isActiveTask) => ({type: TOGGLE_IS_ACTIVE, taskId, isActiveTask})
-export const deleteTask = (taskId) => ({type: DELETE_TASK, taskId})
-export const addNewTask = (title) => ({type: ADD_NEW_TASK, title})
+export const getTasksAC = (listTasks) => ({type: GET_LIST_OF_TASKS, listTasks})
+export const setUpdateTaskAC = (taskId, taskName) => ({type: SET_TASK, taskId, taskName})
+export const setFlagIsActiveAC = (taskId, isCompleted) => ({type: TOGGLE_IS_COMPLETED, taskId, isCompleted})
+export const deleteTaskAC = (taskId) => ({type: DELETE_TASK, taskId})
+export const addNewTaskAC = (taskName, userId, taskId) => ({type: ADD_NEW_TASK, taskName, userId, taskId})
+
+export const getListOfTasks = (userId) => async (dispatch) => {
+    const listTasks = []
+    const response = await tasksAPI.getListOfTasks(userId)
+    response.docs.forEach(doc => {
+        const task = doc.data()
+        task.taskId = doc.id
+        listTasks.push(task)
+    })
+    dispatch(getTasksAC(listTasks))
+    console.log(listTasks)
+}
+
+export const toggleIsCompleted = (taskId, completed) => async (dispatch) => {
+    await tasksAPI.toggleIsCompleted(taskId, completed)
+    dispatch(setFlagIsActiveAC(taskId, completed))
+}
+
+export const updateTask = (taskId, taskName) => async (dispatch) => {
+    await tasksAPI.updateTask(taskId, taskName)
+    dispatch(setUpdateTaskAC(taskId, taskName))
+}
+
+export const deleteTask = (taskId) => async (dispatch) => {
+    await tasksAPI.deleteTask(taskId)
+    dispatch(deleteTaskAC(taskId))
+}
+
+export const addNewTask = (taskName, userId) => async (dispatch) => {
+    const response = await tasksAPI.addNewTask(taskName, userId)
+    const taskId = response.id
+    dispatch(addNewTaskAC(taskName, userId, taskId))
+}
+
 
 export default taskBoardReducer
