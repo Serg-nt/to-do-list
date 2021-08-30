@@ -82,7 +82,7 @@ export const tasksAPI = {
             .where('user', '==', userId)
             .where('boardId', '==', boardId)
             .get()
-        return result.docs.map(doc => doc.data())
+        return result.docs.map(doc => ({taskId: doc.id, ...doc.data()}))
     },
     toggleIsCompleted(taskId, isCompleted) {
         return db.collection('tasks')
