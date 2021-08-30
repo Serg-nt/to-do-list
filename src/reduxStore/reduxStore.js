@@ -1,12 +1,14 @@
 import {applyMiddleware, combineReducers, createStore} from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension'
 import thunkMiddleware from 'redux-thunk'
-import taskBoardReducer from "./taskBoardReducer";
+import taskReducer from "./taskReducer";
 import {reducer as formReducer} from 'redux-form'
 import authReducer from "./authReducer";
+import tasksBoardsReducer from "./tasksBoardsReducer";
 
 const reducers = combineReducers({
-    taskBoard: taskBoardReducer,
+    task: taskReducer,
+    tasksBoards: tasksBoardsReducer,
     auth: authReducer,
     form: formReducer,
 })

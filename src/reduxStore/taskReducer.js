@@ -3,14 +3,15 @@ import {tasksAPI} from "../api/api";
 const SET_TASK = 'SET_TASK';
 const TOGGLE_IS_COMPLETED = 'TOGGLE_IS_COMPLETED';
 const DELETE_TASK = 'DELETE_TASK';
-const ADD_NEW_TASK = 'ADD_NEW_TASK';
+const CREATE_TASK = 'CREATE_TASK';
 const GET_LIST_OF_TASKS = 'GET_LIST_OF_TASKS';
+const DELETE_REMOTE_BOARD_TASKS = 'DELETE_REMOTE_BOARD_TASKS';
 
 const initialState = {
     tasks: [],
 }
 
-const taskBoardReducer = (state = initialState, action) => {
+const taskReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_LIST_OF_TASKS:
             return {
@@ -36,7 +37,13 @@ const taskBoardReducer = (state = initialState, action) => {
                 ...state,
                 tasks: state.tasks.filter(task => task.taskId !== action.taskId)
             }
-        case ADD_NEW_TASK:
+        case DELETE_REMOTE_BOARD_TASKS:
+            return {
+                ...state,
+                tasks: state.tasks.filter(task => task.taskId !== action.taskId)
+                    .filter(task => task.boardId !== action.boardId)
+            }
+        case CREATE_TASK:
             const newTask = {
                 name: action.taskName,
                 completed: false,
@@ -56,16 +63,11 @@ export const getTasksAC = (listTasks) => ({type: GET_LIST_OF_TASKS, listTasks})
 export const setUpdateTaskAC = (taskId, taskName) => ({type: SET_TASK, taskId, taskName})
 export const setFlagIsActiveAC = (taskId, isCompleted) => ({type: TOGGLE_IS_COMPLETED, taskId, isCompleted})
 export const deleteTaskAC = (taskId) => ({type: DELETE_TASK, taskId})
-export const addNewTaskAC = (taskName, userId, taskId) => ({type: ADD_NEW_TASK, taskName, userId, taskId})
+export const createTaskAC = (taskName, userId, taskId) => ({type: CREATE_TASK, taskName, userId, taskId})
+export const deleteRemoteBoardTasksAC = (userId, boardId) => ({type: DELETE_REMOTE_BOARD_TASKS, userId, boardId})
 
-export const getListOfTasks = (userId) => async (dispatch) => {
-    const listTasks = []
-    const response = await tasksAPI.getListOfTasks(userId)
-    response.docs.forEach(doc => {
-        const task = doc.data()
-        task.taskId = doc.id
-        listTasks.push(task)
-    })
+export const getListOfTasks = (userId, boardId) => async (dispatch) => {
+    const listTasks = await tasksAPI.getTasks(userId, boardId)
     dispatch(getTasksAC(listTasks))
     console.log(listTasks)
 }
@@ -81,15 +83,16 @@ export const updateTask = (taskId, taskName) => async (dispatch) => {
 }
 
 export const deleteTask = (taskId) => async (dispatch) => {
+    debugger
     await tasksAPI.deleteTask(taskId)
     dispatch(deleteTaskAC(taskId))
 }
 
-export const addNewTask = (taskName, userId) => async (dispatch) => {
-    const response = await tasksAPI.addNewTask(taskName, userId)
+export const createTask = (taskName, userId, boardId) => async (dispatch) => {
+    const response = await tasksAPI.createTask(taskName, userId, boardId)
     const taskId = response.id
-    dispatch(addNewTaskAC(taskName, userId, taskId))
+    dispatch(createTaskAC(taskName, userId, taskId, boardId))
 }
 
 
-export default taskBoardReducer
+export default taskReducer

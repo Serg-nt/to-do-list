@@ -7,6 +7,7 @@ import store from "./reduxStore/reduxStore";
 import {BrowserRouter, Route} from "react-router-dom";
 import LoginContainer from "./components/login/login";
 import HeaderContainer from "./components/header/header";
+import BoardSelectionContainer from "./components/boardSelection/boardSelection";
 
 class App extends React.Component {
     componentDidMount() {
@@ -18,6 +19,7 @@ class App extends React.Component {
                 <HeaderContainer/>
                 <Navbar/>
                 <div className={classes.board}>
+                    <Route path='/boardSelection' render={() => <BoardSelectionContainer /> }/>
                     <Route path='/taskBoard' render={() => <TaskBoardContainer /> }/>
                     <Route path='/login' render={() => <LoginContainer /> }/>
                 </div>

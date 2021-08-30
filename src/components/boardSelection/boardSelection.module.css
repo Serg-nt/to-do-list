@@ -1,0 +1,40 @@
+.main {
+    margin: 10px;
+    padding: 5px;
+    background: lightskyblue;
+}
+
+.main p {
+    text-align: center;
+}
+
+.listBoards {
+    margin: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.navLink button {
+    width: 95%;
+    max-width: 150px;
+    margin: 5px;
+    padding: 5px;
+}
+
+.navLink a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #333333;
+}
+
+.navLink a:hover {
+    text-shadow: 2px 2px 0px #FFFFFF, 5px 4px 0px rgba(0,0,0,0.15);
+}
+
+.newBoard {
+    margin: 10px;
+}
+
+.newBoard input {
+    width: 100px;
+}

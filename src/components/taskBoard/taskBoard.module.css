@@ -1,3 +1,11 @@
+.taskBoard {
+    height: 85%;
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid saddlebrown;
+    background-color: bisque;
+    border-radius: 10px;
+}
 
 ul {
     margin: 0px;

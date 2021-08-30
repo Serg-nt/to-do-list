@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 
-const NewTask = ({addNewTask, userId}) => {
+const NewTask = ({createTask, userId, boardId}) => {
 
     const [taskName, setEditName] = useState('')
 
@@ -10,7 +10,7 @@ const NewTask = ({addNewTask, userId}) => {
 
     const addTask = () => {
         if(taskName !== '') {
-            addNewTask(taskName, userId)
+            createTask(taskName, userId, boardId)
         }
         setEditName('')
     }

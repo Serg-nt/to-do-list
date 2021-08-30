@@ -52,7 +52,7 @@ const Login = ({isAuth, login, createAccount}) => {
     }
 
     if(isAuth) {
-        return <Redirect to={'/taskBoard'} />
+        return <Redirect to={'/boardSelection'} />
     }
 
     return(

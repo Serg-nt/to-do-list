@@ -26,6 +26,7 @@ const TaskItem = ({name, taskId, completed, updateTask, toggleIsCompleted, delet
     const removeTask = () => {
         deleteTask(taskId)
     }
+    /// ??? () => deleteTask(taskId) не сработала передача taskId
 
     const deletedTask = <span className={classes.deleteTask} onClick={removeTask}>x</span>
 

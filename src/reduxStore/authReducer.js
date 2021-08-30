@@ -1,4 +1,5 @@
 import {authAPI} from "../api/api";
+import {deleteActiveBoardAC} from "./tasksBoardsReducer";
 
 const SET_AUTH_USER_DATA = 'SET_AUTH_USER_DATA';
 
@@ -6,9 +7,6 @@ const initialState = {
     email: null,
     userId: null,
     isAuth: false,
-    // email: 'auth@mail.ru',
-    // userId: 'p1BuU8BHWMceiNDbuqpbnZ6Ujjf1',
-    // isAuth: true,
 }
 
 const authReducer = (state = initialState, action) => {
@@ -23,23 +21,25 @@ const authReducer = (state = initialState, action) => {
 }
 
 
-export const setAuthUserData = (email, userId, isAuth) =>
+export const setAuthUserDataAC = (email, userId, isAuth) =>
     ({type: SET_AUTH_USER_DATA, email, userId, isAuth})
 
 export const login = (email, password) => async (dispatch) => {
     const response = await authAPI.login(email, password)
-    dispatch(setAuthUserData(email, response.user.uid, true))
+    const userId = response.user.uid
+    dispatch(setAuthUserDataAC(email, userId, true))
 }
 
-export const logout = () => async(dispatch) => {
+export const logout = () => async (dispatch) => {
     await authAPI.logout()
-    dispatch(setAuthUserData(null, null, false))
+    dispatch(setAuthUserDataAC(null, null, false))
+    dispatch(deleteActiveBoardAC())
 }
 
 export const createAccount = (email, password) => async (dispatch) => {
     const response = await authAPI.createAccount(email, password)
     await authAPI.setUserData(email, response.user.uid)
-    dispatch(setAuthUserData(email, response.user.uid, true))
+    dispatch(setAuthUserDataAC(email, response.user.uid, true))
 }
 
 export default authReducer

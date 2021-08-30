@@ -3,7 +3,11 @@
 }
 
 .loginForm {
-    padding: 5px;
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid saddlebrown;
+    background-color: bisque;
+    border-radius: 10px;
 }
 
 .loginForm button {
