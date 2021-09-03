@@ -55,6 +55,7 @@ export const deleteBoardAC = (boardId) =>
 export const readTasksBoards = (userId) => async (dispatch) => {
     const tasksBoards = await tasksBoardsAPI.getTasksBoards(userId)
     dispatch(setTasksBoardsDataAC(tasksBoards))
+    console.log(tasksBoards)
 }
 
 export const createNewBoard = (userId, boardName) => async (dispatch) => {

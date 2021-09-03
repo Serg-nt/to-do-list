@@ -1,8 +1,6 @@
 import firebase from "firebase";
 import {db} from "../db";
 
-
-
 export const authAPI = {
     login(email, password) {
         return firebase
@@ -33,8 +31,12 @@ export const tasksBoardsAPI = {
         const result = await db.collection('users')
             .where('userId', '==', userId)
             .get()
+        debugger
         return result.docs[0]
             .data()
+            // .tasksBoards.map((doc) => ({taskBoardName: doc}))
+        // result.docs[0]
+        //     .data()
             .tasksBoards
     },
     async createBoard(userId, boardName) {
@@ -77,12 +79,13 @@ export const tasksBoardsAPI = {
 // }
 
 export const tasksAPI = {
-    async getTasks(userId, boardId) { /// ??? правильно ли писать async в редюсере
+    async getTasks(userId, boardId) { /// ??? правильно ли писать async в редюсере и тут
         const result = await db.collection('tasks')
             .where('user', '==', userId)
             .where('boardId', '==', boardId)
             .get()
         return result.docs.map(doc => ({taskId: doc.id, ...doc.data()}))
+        // result.docs.filter(doc => (doc.data().completed == false)).length
     },
     toggleIsCompleted(taskId, isCompleted) {
         return db.collection('tasks')
