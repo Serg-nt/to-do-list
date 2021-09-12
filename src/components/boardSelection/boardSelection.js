@@ -21,7 +21,7 @@ class BoardSelection extends React.Component {
             .map((b, index) =>
                 <BoardItem key={index}
                            boardId={index}
-                           name={b}
+                           name={b.taskBoardName}
                            setActiveBoardAC={this.props.setActiveBoardAC}
                 />)
 

@@ -16,7 +16,7 @@ const Navbar = ({tasksBoards, activeBoardId, userId, createNewBoard, setActiveBo
         .map((b, index) =>
             <BoardItem key={index}
                        boardId={index}
-                       name={b}
+                       name={b.taskBoardName}
                        setActiveBoardAC={setActiveBoardAC}
             />)
 

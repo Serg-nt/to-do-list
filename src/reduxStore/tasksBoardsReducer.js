@@ -30,11 +30,11 @@ const tasksBoardsReducer = (state = initialState, action) => {
             const newTasksBoards = [...state.tasksBoards]
             newTasksBoards.splice(action.boardId, 1)
             return {
-                ...state, tasksBoards: newTasksBoards
+                ...state, tasksBoards: newTasksBoards, activeBoardId: null
             }
         case CREATE_NEW_BOARD:
             return {
-                ...state, tasksBoards: [...state.tasksBoards, action.boardName]
+                ...state, tasksBoards: [...state.tasksBoards, {taskBoardName: action.boardName}]
             }
         default:
             return state
@@ -67,7 +67,6 @@ export const deleteBoard = (userId, boardId) => async (dispatch) => {
     await tasksBoardsAPI.deleteBoard(userId, boardId)
     await tasksAPI.deleteRemoteBoardTasks(userId, boardId)
     dispatch(deleteBoardAC(boardId))
-    dispatch(deleteActiveBoardAC())
     dispatch(deleteRemoteBoardTasksAC(userId, boardId))
 }
 

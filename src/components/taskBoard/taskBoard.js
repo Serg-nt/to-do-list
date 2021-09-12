@@ -14,7 +14,7 @@ class TaskBoard extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (this.props.activeBoardId != prevProps.activeBoardId) {
+        if (this.props.activeBoardId !== prevProps.activeBoardId) {
             this.props.getListOfTasks(this.props.userId, this.props.activeBoardId)
         }
     }
@@ -48,7 +48,7 @@ class TaskBoard extends React.Component {
 
         return (
             <div className={classes.taskBoard}>
-                <b>{this.props.tasksBoards[this.props.activeBoardId]}{deletedBoard}</b>
+                <b>{this.props.tasksBoards[this.props.activeBoardId].taskBoardName}{deletedBoard}</b>
                 <ul>
                     {items}
                 </ul>

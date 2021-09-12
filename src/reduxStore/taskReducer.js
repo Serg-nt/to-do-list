@@ -67,7 +67,7 @@ export const createTaskAC = (taskName, userId, taskId) => ({type: CREATE_TASK, t
 export const deleteRemoteBoardTasksAC = (userId, boardId) => ({type: DELETE_REMOTE_BOARD_TASKS, userId, boardId})
 
 export const getListOfTasks = (userId, boardId) => async (dispatch) => {
-    const listTasks = await tasksAPI.getTasks(userId, boardId)
+    const listTasks = await tasksAPI.getListOfTasks(userId, boardId)
     dispatch(getTasksAC(listTasks))
     console.log(listTasks)
 }

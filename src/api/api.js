@@ -1,6 +1,19 @@
 import firebase from "firebase";
 import {db} from "../db";
 
+const getTaskByBoardId = (userId, boardId) => {
+    return db.collection('tasks')
+        .where('user', '==', userId)
+        .where('boardId', '==', boardId)
+        .get()
+}
+
+const getTaskByUserId = (userId) => {
+    return db.collection('users')
+        .where('userId', '==', userId)
+        .get()
+}
+
 export const authAPI = {
     login(email, password) {
         return firebase
@@ -28,21 +41,13 @@ export const authAPI = {
 
 export const tasksBoardsAPI = {
     async getTasksBoards(userId) {
-        const result = await db.collection('users')
-            .where('userId', '==', userId)
-            .get()
-        debugger
+        const result = await getTaskByUserId(userId)
         return result.docs[0]
             .data()
-            // .tasksBoards.map((doc) => ({taskBoardName: doc}))
-        // result.docs[0]
-        //     .data()
-            .tasksBoards
+            .tasksBoards.map((doc) => ({taskBoardName: doc}))
     },
     async createBoard(userId, boardName) {
-        const result = await db.collection('users')
-            .where('userId', '==', userId)
-            .get()
+        const result = await getTaskByUserId(userId)
         const docId = result.docs[0].id
         const newTasksBoards = result.docs[0]
             .data()
@@ -52,11 +57,9 @@ export const tasksBoardsAPI = {
             .doc(docId)
             .update({tasksBoards: newTasksBoards})
     },
-    /// ??? повторение кода, верно ли вообще сделано
+
     async deleteBoard(userId, boardId) {
-        const result = await db.collection('users')
-            .where('userId', '==', userId)
-            .get()
+        const result = await getTaskByUserId(userId)
         const docId = result.docs[0].id
         const newTasksBoards = result.docs[0]
             .data()
@@ -68,24 +71,13 @@ export const tasksBoardsAPI = {
     },
 }
 
-// const getTaskBoard = async (userId) => {
-//     const result = await db.collection('users')
-//         .where('userId', '==', userId)
-//         .get()
-//     const docId = result.docs[0].id
-//     return result.docs[0]
-//         .data()
-//         .tasksBoards
-// }
-
 export const tasksAPI = {
-    async getTasks(userId, boardId) { /// ??? правильно ли писать async в редюсере и тут
-        const result = await db.collection('tasks')
-            .where('user', '==', userId)
-            .where('boardId', '==', boardId)
-            .get()
+    async getListOfTasks(userId, boardId) {
+        const result = await getTaskByBoardId(userId, boardId)
+        debugger
         return result.docs.map(doc => ({taskId: doc.id, ...doc.data()}))
         // result.docs.filter(doc => (doc.data().completed == false)).length
+        // result.docs.length
     },
     toggleIsCompleted(taskId, isCompleted) {
         return db.collection('tasks')
@@ -103,10 +95,7 @@ export const tasksAPI = {
             .delete()
     },
     async deleteRemoteBoardTasks(userId, boardId) {
-        const result = await db.collection('tasks')
-            .where('user', '==', userId)
-            .where('boardId', '==', boardId)
-            .get()
+        const result = await getTaskByBoardId(userId, boardId)
         const arrayDeleteTasks = result.docs.map(doc => doc.id)
         return arrayDeleteTasks.forEach(el => {
             db.collection('tasks')
